@@ -9,10 +9,8 @@ const num_lines = 1000;
 var left_nums: [1000]u32 = undefined;
 var right_nums: [1000]u32 = undefined;
 
-var total_distance: u32 = 0;
-
 pub fn main() !void {
-    try part_1();
+    try part_2();
 }
 
 fn part_1() !void {
@@ -22,6 +20,8 @@ fn part_1() !void {
     std.mem.sort(u32, &left_nums, {}, comptime std.sort.asc(u32));
     std.mem.sort(u32, &right_nums, {}, comptime std.sort.asc(u32));
 
+    var total_distance: u32 = 0;
+
     for (left_nums, right_nums) |left_num, right_num| {
         if (left_num > right_num) {
             total_distance += left_num - right_num;
@@ -30,6 +30,23 @@ fn part_1() !void {
         }
     }
     std.debug.print("{}", .{total_distance});
+}
+
+// Very naive solution, O(n^2)
+fn part_2() !void {
+    try parse_nums();
+
+    var similarity_score: u32 = 0;
+
+    for (left_nums) |left_num| {
+        for (right_nums) |right_num| {
+            if (left_num == right_num) {
+                similarity_score += left_num;
+            }
+        }
+    }
+
+    std.debug.print("{}", .{similarity_score});
 }
 
 fn parse_nums() !void {
