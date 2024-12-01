@@ -12,12 +12,11 @@ var right_nums: [1000]u32 = undefined;
 var total_distance: u32 = 0;
 
 pub fn main() !void {
-    std.debug.assert(input.len == num_lines * line_offset);
-    // Parse nums
-    for (0..num_lines) |index| {
-        left_nums[index] = try std.fmt.parseInt(u32, input[index * line_offset .. index * line_offset + 5], 10);
-        right_nums[index] = try std.fmt.parseInt(u32, input[index * line_offset + 8 .. index * line_offset + 13], 10);
-    }
+    try part_1();
+}
+
+fn part_1() !void {
+    try parse_nums();
 
     // Sort nums
     std.mem.sort(u32, &left_nums, {}, comptime std.sort.asc(u32));
@@ -31,4 +30,13 @@ pub fn main() !void {
         }
     }
     std.debug.print("{}", .{total_distance});
+}
+
+fn parse_nums() !void {
+    std.debug.assert(input.len == num_lines * line_offset);
+    // Parse nums
+    for (0..num_lines) |index| {
+        left_nums[index] = try std.fmt.parseInt(u32, input[index * line_offset .. index * line_offset + 5], 10);
+        right_nums[index] = try std.fmt.parseInt(u32, input[index * line_offset + 8 .. index * line_offset + 13], 10);
+    }
 }
