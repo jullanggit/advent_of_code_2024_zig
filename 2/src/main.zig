@@ -10,7 +10,7 @@ const Order = enum {
     Undefined,
 };
 
-pub fn main() !void {
+fn part_1() !void {
     var lines = splitScalar(u8, input[0 .. input.len - 1], '\n');
 
     var safe_reports: u128 = 0;
@@ -56,4 +56,8 @@ pub fn main() !void {
         safe_reports += @intFromBool(safe);
     }
     std.debug.print("{}", .{safe_reports});
+}
+
+pub fn main() !void {
+    try part_1();
 }
