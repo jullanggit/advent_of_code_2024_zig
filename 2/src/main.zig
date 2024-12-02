@@ -58,6 +58,72 @@ fn part_1() !void {
     std.debug.print("{}", .{safe_reports});
 }
 
+fn part_2() !void {
+    var lines = splitScalar(u8, input[0 .. input.len - 1], '\n');
+
+    var safe_reports: u128 = 0;
+
+    while (lines.next()) |line| {
+        var str_nums = splitScalar(u8, line, ' ');
+
+        var nums: [8]u8 = undefined;
+        var index: usize = 0;
+        while (str_nums.next()) |str_num| {
+            nums[index] = try std.fmt.parseInt(u8, str_num, 10);
+            index += 1;
+        }
+
+        var order = Order.Undefined;
+        var safe = true;
+        var last_num = nums[0];
+        var bad_level_skipped = false;
+        for (nums[1..index]) |num| {
+            switch (std.math.order(num, last_num)) {
+                .eq => {
+                    if (bad_level_skipped) {
+                        safe = false;
+                        break;
+                    } else {
+                        bad_level_skipped = true;
+                        continue;
+                    }
+                },
+                .lt => {
+                    if (last_num - num > 3 or order == Order.Ascending) {
+                        if (bad_level_skipped) {
+                            safe = false;
+                            break;
+                        } else {
+                            bad_level_skipped = true;
+                            continue;
+                        }
+                    }
+                    if (order == Order.Undefined) {
+                        order = Order.Descending;
+                    }
+                },
+                .gt => {
+                    if (num - last_num > 3 or order == Order.Descending) {
+                        if (bad_level_skipped) {
+                            safe = false;
+                            break;
+                        } else {
+                            bad_level_skipped = true;
+                            continue;
+                        }
+                    }
+                    if (order == Order.Undefined) {
+                        order = Order.Ascending;
+                    }
+                },
+            }
+            last_num = num;
+        }
+        safe_reports += @intFromBool(safe);
+    }
+    std.debug.print("{}", .{safe_reports});
+}
+
 pub fn main() !void {
-    try part_1();
+    try part_2();
 }
